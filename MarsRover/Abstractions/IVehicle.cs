@@ -11,5 +11,6 @@ namespace MarsRover.Abstractions
     {
         public ICoordinate Coordinate { get; set; }
         public DirectionEnum Direction { get; set; }
+        public string ToStringCoordinateAndDirection();
     }
 }

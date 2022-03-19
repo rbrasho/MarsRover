@@ -96,5 +96,10 @@ namespace MarsRover.Application
             int directionValue = (int)(this.Direction + 1);
             this.Direction = (DirectionEnum)(directionValue > 3 ? 0 : directionValue);
         }
+
+        public string ToStringCoordinateAndDirection()
+        {
+            return String.Format("{0} {1} {2}", this.Coordinate.X, this.Coordinate.Y, this.Direction); 
+        }
     }
 }
