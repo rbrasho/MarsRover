@@ -22,7 +22,7 @@ namespace MarsRover
             string fourthLine = Console.ReadLine();
             string fifthLine = Console.ReadLine();
 
-            foreach (var item in StringWorker.Run(firstLine, secondLine, thirdLine, fourthLine,fifthLine))
+            foreach (var item in RoverService.Run(firstLine, secondLine, thirdLine, fourthLine,fifthLine))
             {
                 Console.WriteLine(item.ToStringCoordinateAndDirection());
             } 

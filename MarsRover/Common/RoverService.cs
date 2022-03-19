@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MarsRover.Common
 {
-    public class StringWorker
+    public class RoverService
     {
         public static List<Rover> Run(String firstLine, String secondLine, String thirdLine, String fourthLine, String fifthLine)
         {
