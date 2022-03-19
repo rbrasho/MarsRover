@@ -9,125 +9,61 @@ namespace MarsRoverTestProject
 {
     public class RoverTest
     {
-        [Fact]
-        public void TurnLeftWest()
+        [Theory]
+        [InlineData(DirectionEnum.W, DirectionEnum.S)]
+        [InlineData(DirectionEnum.S, DirectionEnum.E)]
+        [InlineData(DirectionEnum.E, DirectionEnum.N)]
+        [InlineData(DirectionEnum.N, DirectionEnum.W)]
+        public void TurnLeft(DirectionEnum current, DirectionEnum expected)
         {
-            Rover rover = new Rover(new Coordinate(2, 3), DirectionEnum.W);
+            Rover rover = new Rover(new Coordinate(2, 3), current);
             rover.TurnLeft();
-            Assert.True(rover.Direction==DirectionEnum.S);
+            Assert.True(rover.Direction == expected);
         }
-        [Fact]
-        public void TurnRightWest()
+        [Theory]
+        [InlineData(DirectionEnum.W, DirectionEnum.N)]
+        [InlineData(DirectionEnum.N, DirectionEnum.E)]
+        [InlineData(DirectionEnum.E, DirectionEnum.S)]
+        [InlineData(DirectionEnum.S, DirectionEnum.W)]
+        public void TurnRight(DirectionEnum current, DirectionEnum expected)
         {
-            Rover rover = new Rover(new Coordinate(2, 3), DirectionEnum.W);
+            Rover rover = new Rover(new Coordinate(2, 3), current);
             rover.TurnRight();
-            Assert.True(rover.Direction == DirectionEnum.N);
-        }
-        [Fact]
-        public void TurnLeftSouth()
-        {
-            Rover rover = new Rover(new Coordinate(2, 3), DirectionEnum.S);
-            rover.TurnLeft();
-            Assert.True(rover.Direction == DirectionEnum.E);
-        }
-        [Fact]
-        public void TurnRightSouth()
-        {
-            Rover rover = new Rover(new Coordinate(2, 3), DirectionEnum.S);
-            rover.TurnRight();
-            Assert.True(rover.Direction == DirectionEnum.W);
-        }
-        [Fact]
-        public void TurnLeftEast()
-        {
-            Rover rover = new Rover(new Coordinate(2, 3), DirectionEnum.E);
-            rover.TurnLeft();
-            Assert.True(rover.Direction == DirectionEnum.N);
-        }
-        [Fact]
-        public void TurnRightEast()
-        {
-            Rover rover = new Rover(new Coordinate(2, 3), DirectionEnum.E);
-            rover.TurnRight();
-            Assert.True(rover.Direction == DirectionEnum.S);
-        }
-        [Fact]
-        public void TurnLeftNorth()
-        {
-            Rover rover = new Rover(new Coordinate(2, 3), DirectionEnum.N);
-            rover.TurnLeft();
-            Assert.True(rover.Direction == DirectionEnum.W);
-        }
-        [Fact]
-        public void TurnRightNorth()
-        {
-            Rover rover = new Rover(new Coordinate(2, 3), DirectionEnum.N);
-            rover.TurnRight();
-            Assert.True(rover.Direction == DirectionEnum.E);
-        }
-        [Fact]
-        public void ChangeCoordinateWest()
-        {
-            Rover rover = new Rover(new Coordinate(2, 3), DirectionEnum.W);
-            Plateau plateau = new Plateau(new Coordinate(5, 5));
-            rover.ChangeCoordinate(plateau);
-            Assert.True(rover.Coordinate.X == 1);
-        }
-        [Fact]
-        public void ChangeCoordinateEast()
-        {
-            Rover rover = new Rover(new Coordinate(2, 3), DirectionEnum.E);
-            Plateau plateau = new Plateau(new Coordinate(5, 5));
-            rover.ChangeCoordinate(plateau);
-            Assert.True(rover.Coordinate.X == 3);
-        }
-        [Fact]
-        public void ChangeCoordinateSouth()
-        {
-            Rover rover = new Rover(new Coordinate(2, 3), DirectionEnum.S);
-            Plateau plateau = new Plateau(new Coordinate(5, 5));
-            rover.ChangeCoordinate(plateau);
-            Assert.True(rover.Coordinate.Y == 2);
-        }
-        [Fact]
-        public void ChangeCoordinateNorth()
-        {
-            Rover rover = new Rover(new Coordinate(2, 3), DirectionEnum.N);
-            Plateau plateau = new Plateau(new Coordinate(5, 5));
-            rover.ChangeCoordinate(plateau);
-            Assert.True(rover.Coordinate.Y == 4);
+            Assert.True(rover.Direction == expected);
         }
 
-        [Fact]
-        public void AreaMovableFalse()
+        [Theory]
+        [InlineData(2, 3, 5, 5, DirectionEnum.W, 1, 3)]
+        [InlineData(2, 3, 5, 5, DirectionEnum.E, 3, 3)]
+        [InlineData(2, 3, 5, 5, DirectionEnum.S, 2, 2)]
+        [InlineData(2, 3, 5, 5, DirectionEnum.N, 2, 4)]
+        public void ChangeCoordinate(int roverX, int roverY, int plateauX, int plateauY, DirectionEnum current, int expectedX, int expectedY)
         {
-            Rover rover = new Rover(new Coordinate(5, 5), DirectionEnum.N);
-            Plateau plateau = new Plateau(new Coordinate(5, 5));
-            Assert.True(plateau.Moveable(rover)==false);
+            Rover rover = new Rover(new Coordinate(roverX, roverY), current);
+            Plateau plateau = new Plateau(new Coordinate(plateauX, plateauY));
+            rover.ChangeCoordinate(plateau);
+            Assert.True(rover.Coordinate.X == expectedX && rover.Coordinate.Y == expectedY);
         }
-        [Fact]
-        public void AreaMovableTrue()
+        [Theory]
+        [InlineData(5, 5, 5, 5, DirectionEnum.W, true)]
+        [InlineData(5, 5, 5, 5, DirectionEnum.S, true)]
+        [InlineData(5, 5, 5, 5, DirectionEnum.N, false)]
+        [InlineData(5, 5, 5, 5, DirectionEnum.E, false)]
+        public void AreaMoveable(int roverX, int roverY, int plateauX, int plateauY, DirectionEnum current, bool expected)
         {
-            Rover rover = new Rover(new Coordinate(5, 5), DirectionEnum.S);
-            Plateau plateau = new Plateau(new Coordinate(5, 5));
-            Assert.True(plateau.Moveable(rover) == true);
+            Rover rover = new Rover(new Coordinate(roverX, roverY), current);
+            Plateau plateau = new Plateau(new Coordinate(plateauX, plateauY));
+            Assert.True(plateau.Moveable(rover) == expected);
         }
-        [Fact]
-        public void ExploreCaseOne()
+        [Theory]
+        [InlineData(1, 2, 5, 5, DirectionEnum.N, "LMLMLMLMM", 1,3, DirectionEnum.N)]
+        [InlineData(3, 3, 5, 5, DirectionEnum.E, "MMRMMRMRRM", 5, 1, DirectionEnum.E)]
+        public void Explore(int roverX, int roverY, int plateauX, int plateauY, DirectionEnum current, string parameters, int expectedX, int expectedY, DirectionEnum expectedDirection)
         {
-            Plateau plateau = new Plateau(new Coordinate(5, 5));
-            Rover rover = new Rover(new Coordinate(1, 2), DirectionEnum.N);
-            rover.Explore(plateau, "LMLMLMLMM");
-            Assert.True(rover.Direction == DirectionEnum.N && rover.Coordinate.X == 1 && rover.Coordinate.Y==3);
-        }
-
-        [Fact]
-        public void ExploreCaseTwo()
-        {
-            Plateau plateau = new Plateau(new Coordinate(5, 5));
-            Rover rover = new Rover(new Coordinate(3, 3), DirectionEnum.E);
-            rover.Explore(plateau, "MMRMMRMRRM");
-            Assert.True(rover.Direction == DirectionEnum.E && rover.Coordinate.X == 5 && rover.Coordinate.Y == 1);
+            Plateau plateau = new Plateau(new Coordinate(plateauX, plateauY));
+            Rover rover = new Rover(new Coordinate(roverX, roverY), current);
+            rover.Explore(plateau, parameters);
+            Assert.True(rover.Direction == expectedDirection && rover.Coordinate.X == expectedX && rover.Coordinate.Y == expectedY);
         }
         [Fact]
         public void ExploreCaseParameterError()
@@ -183,7 +119,7 @@ namespace MarsRoverTestProject
         {
             Plateau plateau = new Plateau(new Coordinate(5, 5));
             Rover rover = new Rover(new Coordinate(1, 2), DirectionEnum.N);
-            rover.Explore( plateau, "LMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRM");
+            rover.Explore(plateau, "LMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRMLMLMLMLMRMRMRMRM");
             Assert.True(rover.Direction == DirectionEnum.N && rover.Coordinate.X == 1 && rover.Coordinate.Y == 2);
         }
     }
