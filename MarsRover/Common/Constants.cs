@@ -20,9 +20,5 @@ namespace MarsRover.Common
         public static string WarningCorrectData = "Please enter correct data!";
         public static string WarningNumericValue = "Please enter numeric value!";
         public static string WarningDirectionParameter= "Please enter valid enum data (N,S,W,E) for rover!";
-
-        
-        
-
     }
 }
